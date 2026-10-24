@@ -1,0 +1,629 @@
+/* InPerson Group: hand-written stylesheet.
+   Design tokens are re-expressed from the live WordPress kit (page-builder kit 9, theme
+   hello). No WordPress CSS or JS is shipped; fonts are self-hosted. Epilogue and Manrope are
+   variable fonts: the weight ranges below are their real axes, so bold is drawn, not synthesised.
+   Typography (round 5): one small type system, ten roles, set in the "type roles" section. Context
+   rules below it keep layout and colour only, partner cards included (round 6). */
+
+@font-face {
+  font-family: "Tenor Sans";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("../fonts/tenor-sans-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Epilogue";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("../fonts/epilogue-latin.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Manrope";
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+  src: url("../fonts/manrope-latin.woff2") format("woff2");
+}
+
+:root {
+  /* colours: kit globals */
+  --color-primary: #fc7c04;
+  --color-secondary: #737475;
+  --color-secondary-text: #646566; /* secondary for text on --color-soft: 5.0:1 (secondary is 4.0:1) */
+  --color-text: #012b6a;
+  --color-soft: #efeeee;
+  --color-white: #ffffff;
+  --color-linkedin: #0a66c2;
+  --color-map-land: #999999;
+  --color-map-border: #f9f9f9;
+  /* hairline for header and footer dividers: the text navy at 15%, a tint (no new hue) that
+     reads on white and on --color-soft alike */
+  --color-rule: color-mix(in srgb, var(--color-text) 15%, transparent);
+
+  /* typography: three families, ten roles (the typography plan). Size and leading are
+     whole pixels; tablet and phone values override below. */
+  --font-heading: "Tenor Sans", sans-serif;
+  --font-label: "Epilogue", sans-serif;
+  --font-body: "Manrope", sans-serif;
+  --fs-display: 56px; --lh-display: 64px;
+  --fs-h1: 34px;      --lh-h1: 44px;
+  --fs-h2: 26px;      --lh-h2: 34px;
+  --fs-h3: 18px;      --lh-h3: 28px;
+  --fs-lead: 20px;    --lh-lead: 32px;
+  --fs-body: 17px;    --lh-body: 28px;
+  --fs-small: 14px;   --lh-small: 22px;   --lh-chip: 18px; /* chips: two lines still fit the 44px target */
+  --fs-label: 14px;   --lh-label: 20px;
+  --fs-nav: 16px;     --lh-nav: 24px;
+  --fs-button: 15px;  --lh-button: 20px;
+  --ls-display: 0.02em; --ls-h1: 0.02em; --ls-h2: 0.01em; --ls-label: 0.02em;
+  /* measure: at most 75 characters of Manrope 300 at 17px (measured, type_audit.py scan) */
+  --measure: 33rem;
+  --rule-gap: 24px;
+  --column: calc(var(--measure) + 2px + var(--rule-gap)); /* a ruled column: text, the 2px rule, the gap */
+
+  /* layout */
+  --container: 1140px;
+  --gutter: 5%;
+  --header-logo: 104px; /* the mark's ink is 94px wide, as on WordPress */
+  --avatar: 200px;
+  /* The content column's edge: the container, never closer to the viewport than the gutter.
+     Header and footer pad to it, so they share their edges with the page titles. */
+  --frame: max(var(--gutter), calc((100% - var(--container)) / 2));
+  /* spacing steps for header and footer (8px base) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+}
+@media (max-width: 1024px) {
+  :root {
+    --fs-display: 44px; --lh-display: 52px;
+    --fs-h1: 30px;      --lh-h1: 40px;
+    --fs-h2: 24px;      --lh-h2: 32px;
+    --container: 1024px;
+    --header-logo: 88px;
+  }
+}
+@media (max-width: 767px) {
+  :root {
+    --fs-display: 32px; --lh-display: 40px;
+    --fs-h1: 26px;      --lh-h1: 34px;
+    --fs-h2: 22px;      --lh-h2: 30px;
+    --fs-h3: 17px;      --lh-h3: 26px;
+    --fs-lead: 18px;    --lh-lead: 28px;
+    --fs-body: 16px;    --lh-body: 26px;
+    --rule-gap: 16px;
+    --container: 767px;
+    --header-logo: 72px;
+    --avatar: 120px;
+  }
+}
+
+/* ==== type roles ====
+   The one place the type of the site is set: family, size, weight, leading and tracking of each role, on the
+   selectors that play it. Everything below keeps layout and colour only (tests/test_type_roles.py enforces it).
+   Sentence case everywhere, no text-transform; Tenor Sans has one weight, so its roles never synthesise bold.
+   Headings balance their lines, running text avoids a lone last word (both inherit, so they are set on the
+   role elements and on ancestors of running text, never on a card ancestor). */
+body {
+  margin: 0;
+  background: var(--color-white);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  font-weight: 300;
+  line-height: var(--lh-body);
+  letter-spacing: 0;
+}
+h1, h2, h3, h4, h5, h6 { margin: 0 0 16px; font-weight: 400; line-height: 1.2; }
+
+/* display: the one statement per page that is set large */
+.home-display {
+  font-family: var(--font-heading); font-size: var(--fs-display); font-weight: 400; line-height: var(--lh-display);
+  letter-spacing: var(--ls-display); font-synthesis: none; text-wrap: balance;
+}
+/* h1: page titles */
+.page > h1, .bands > h2:first-child, .home-claims h1 {
+  font-family: var(--font-heading); font-size: var(--fs-h1); font-weight: 400; line-height: var(--lh-h1);
+  letter-spacing: var(--ls-h1); font-synthesis: none; text-wrap: balance;
+}
+/* h2: section headings */
+.home-ecosystem h2, .home-contact h2, .content-body > h2, .contact-block > h2, .partner-country > h2,
+.partner-lead-name, .partner-people .person-name, .embed-dialog h2 {
+  font-family: var(--font-heading); font-size: var(--fs-h2); font-weight: 400; line-height: var(--lh-h2);
+  letter-spacing: var(--ls-h2); font-synthesis: none; text-wrap: balance;
+}
+/* h3: lines that head a block of running text */
+.home-intro h2:first-child, .content-body > h3, .prose > h3,
+.contact-block > .contact-lead, .partner-locations h2, .partner-body h3 {
+  font-family: var(--font-body); font-size: var(--fs-h3); font-weight: 600; line-height: var(--lh-h3);
+  letter-spacing: 0; text-wrap: balance;
+}
+/* lead: the sentence that opens a block */
+.home-intro h2 + h2, .home-vuca-text p, .home-contact p:not(.home-button), .about .bio > p.lead, .content-body > p.lead, .partner-intro {
+  font-family: var(--font-body); font-size: var(--fs-lead); font-weight: 300; line-height: var(--lh-lead);
+  letter-spacing: 0; text-wrap: pretty;
+}
+/* body: everything else inherits it from <body>; form controls and prose h4 do not */
+.location-selects select {
+  font-family: var(--font-body); font-size: var(--fs-body); line-height: var(--lh-body); letter-spacing: 0;
+}
+/* small: footer, captions, status lines, chips */
+.footer-nav a, .copyright, .about figcaption, .home-tiles .tile-caption, .embed-status, .partner-locations ul ul a {
+  font-family: var(--font-body); font-size: var(--fs-small); font-weight: 400; line-height: var(--lh-small);
+  letter-spacing: 0;
+}
+/* chip: the small role with tighter leading, so a two-line chip is as tall as a one-line chip (44px) */
+.partner-locations ul ul a { line-height: var(--lh-chip); }
+/* label: names above a value or a field */
+.partner-locations > nav > ul > li, .partner-locations > nav > ul > li > span, .location-selects label,
+.embed-row label, .partner-lead-job, .contact-columns .hours-label, .partner-people .person-role,
+.partner-people .person-affiliation {
+  font-family: var(--font-label); font-size: var(--fs-label); font-weight: 500; line-height: var(--lh-label);
+  letter-spacing: var(--ls-label);
+}
+/* nav: the main menu and the links that move you around */
+.site-nav a, .skip-link, .back-link {
+  font-family: var(--font-body); font-size: var(--fs-nav); font-weight: 500; line-height: var(--lh-nav);
+  letter-spacing: 0;
+}
+/* button */
+.home-button a, .location-selects button, .embed-copy, .embed-close {
+  font-family: var(--font-label); font-size: var(--fs-button); font-weight: 500; line-height: var(--lh-button);
+  letter-spacing: var(--ls-label);
+}
+/* variants: one bold weight; a block that is bold in every line renders at its role's weight */
+:where(.page:not(.partner)) strong, .partner-body strong { font-weight: 600; }
+.plain-strong strong, .partner > h1 strong, .home-intro h2 strong { font-weight: inherit; }
+.prose > h4 { font-size: var(--fs-body); font-weight: 600; line-height: var(--lh-body); }
+.content, .prose, .about, .home-intro, .home-card { text-wrap: pretty; }
+/* ==== end type roles ==== */
+
+/* ---- reset and base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+/* Header, content, footer: the content grows, so on a short page the footer closes the
+   viewport instead of floating above white space. */
+body { display: flex; flex-direction: column; min-height: 100vh; min-height: 100svh; }
+body > main { flex: 1 0 auto; }
+img, svg { max-width: 100%; height: auto; border: 0; }
+figure { margin: 0; }
+a { color: var(--color-primary); text-decoration: none; }
+a:hover, a:focus-visible { text-decoration: underline; }
+p { margin: 0 0 16px; }
+hr { border: 0; border-top: 1px solid currentColor; margin: 24px 0; }
+/* The WordPress theme hides the footer logo and tagline with its .hide class; same here. */
+.hide { display: none !important; }
+:focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
+.home-ecosystem :focus-visible, .home-contact :focus-visible { outline-color: var(--color-white); }
+.skip-link {
+  position: absolute; top: 8px; left: var(--frame); z-index: 10; padding: 8px 16px;
+  display: flex; align-items: center; box-sizing: border-box; min-height: 44px;
+  background: var(--color-text); color: var(--color-white); transform: translateY(-200%);
+}
+.skip-link:focus { transform: none; }
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---- header and footer: one frame, one link treatment ----
+   Both bars pad to --frame, so the logo and the footer links start where page titles start
+   and the navigation ends where the content column ends. Every chrome link is orange; the
+   accent then guides: an orange rule appears under a link on hover and focus, and the current
+   page (aria-current, set by _includes/nav-link.html) is navy with the rule kept. */
+.site-header, .site-footer { padding-left: var(--frame); padding-right: var(--frame); }
+.site-nav ul, .footer-nav ul { display: flex; flex-wrap: wrap; margin: 0; padding: 0; list-style: none; }
+.site-nav a, .footer-nav a {
+  display: block; padding: var(--space-1) 0; color: var(--color-primary);
+  text-decoration: underline 2px transparent; text-underline-offset: 9px; text-decoration-skip-ink: none;
+}
+/* 44px rows: nav leading 24px + 2 x 10px, footer leading 22px + 2 x 11px (layout only) */
+.site-nav a { padding-block: 10px; }
+.footer-nav a { padding-block: 11px; }
+.site-nav a:hover, .site-nav a:focus-visible, .site-nav a[aria-current],
+.footer-nav a:hover, .footer-nav a:focus-visible, .footer-nav a[aria-current] {
+  text-decoration-color: var(--color-primary);
+}
+.site-nav a[aria-current], .footer-nav a[aria-current] { color: var(--color-text); }
+@media (prefers-reduced-motion: no-preference) {
+  .site-nav a, .footer-nav a { transition: text-decoration-color 0.2s; }
+}
+
+/* ---- header ---- */
+.site-header {
+  position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+  column-gap: var(--space-4); padding-top: var(--space-2); padding-bottom: var(--space-2);
+  background: var(--color-white);
+}
+.site-logo { display: block; }
+.site-logo img { display: block; width: var(--header-logo); height: var(--header-logo); object-fit: contain; }
+.site-nav ul { column-gap: var(--space-5); }
+.nav-toggle, .nav-toggle-label { display: none; }
+@media (max-width: 1024px) { .site-nav ul { column-gap: var(--space-4); } }
+
+/* ---- footer ----
+   A soft band with a hairline on top (it stays a band on the soft-grey service and contact
+   pages too): links on the left edge, the copyright on the right edge. The Privacy policy
+   sub-list is shown inline as peers, so no link hides behind a hover that touch cannot open. */
+.site-footer {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 0 var(--space-5); padding-top: var(--space-3); padding-bottom: var(--space-3);
+  border-top: 1px solid var(--color-rule); background: var(--color-soft);
+}
+.footer-nav ul, .footer-nav .has-children { display: flex; flex-wrap: wrap; column-gap: var(--space-4); }
+.footer-nav a { text-underline-offset: 7px; }
+.copyright { margin: 0; padding: var(--space-1) 0; color: var(--color-secondary-text); }
+
+/* ---- phones: header and footer ----
+   One left edge for all chrome: logo, menu items, footer links and copyright. The menu opens
+   below the header row (CSS only: the checkbox state); its button is three orange lines that
+   turn into a cross while the menu is open. Rows are 44px tap targets. */
+@media (max-width: 767px) {
+  .site-header { padding-top: var(--space-1); padding-bottom: var(--space-1); }
+  .nav-toggle-label { display: block; position: relative; width: 44px; height: 44px; margin-right: -12px; cursor: pointer; }
+  .nav-toggle-label span, .nav-toggle-label span::before, .nav-toggle-label span::after {
+    position: absolute; display: block; width: 20px; height: 2px; background: var(--color-primary); content: "";
+  }
+  .nav-toggle-label span { top: 21px; left: 12px; }
+  .nav-toggle-label span::before { top: -7px; left: 0; }
+  .nav-toggle-label span::after { top: 7px; left: 0; }
+  .nav-toggle:checked + .nav-toggle-label span { background: transparent; }
+  .nav-toggle:checked + .nav-toggle-label span::before { top: 0; transform: rotate(45deg); }
+  .nav-toggle:checked + .nav-toggle-label span::after { top: 0; transform: rotate(-45deg); }
+  .nav-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; right: var(--frame); top: 30px; display: block; }
+  .nav-toggle:focus-visible + .nav-toggle-label { outline: 2px solid var(--color-text); outline-offset: -2px; }
+  .site-nav { display: none; flex-basis: 100%; margin-top: var(--space-1); padding: var(--space-1) 0 var(--space-2); border-top: 1px solid var(--color-rule); }
+  .nav-toggle:checked ~ .site-nav { display: block; }
+  .site-nav ul, .footer-nav ul, .footer-nav .has-children { flex-direction: column; }
+  .site-nav a { padding: 10px 0; }
+  .site-footer { flex-direction: column; align-items: flex-start; padding-top: var(--space-2); padding-bottom: var(--space-3); }
+  .footer-nav a { padding: 11px 0; }
+  .copyright { margin-top: var(--space-2); }
+}
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .nav-toggle-label span, .nav-toggle-label span::before, .nav-toggle-label span::after { transition: transform 0.2s, top 0.2s, background-color 0.2s; }
+}
+
+/* ---- main, shared content ---- */
+.page { min-height: 40vh; }
+.page > h1, .page > h2 { overflow-wrap: anywhere; color: var(--color-primary); }
+
+/* default prose page: Imprint, Privacy, Negotiations */
+.prose { padding: 40px var(--gutter) 64px; }
+.prose > * { max-width: var(--measure); margin-left: auto; margin-right: auto; }
+/* Privacy page: a navy band under the title, an orange band at the end. */
+.bands > h2:first-child::after {
+  content: ""; display: block; height: 50px; margin-top: 24px; background: var(--color-text);
+}
+.bands::after {
+  content: ""; display: block; max-width: var(--measure); height: 50px; margin: 40px auto 0;
+  background: var(--color-primary);
+}
+.prose ul, .prose ol { padding-left: 24px; }
+.prose a { text-decoration: underline; }
+
+/* About & Contact: one page; the bio, the portrait, then the #contact section (spec D11). */
+.about { padding: 48px var(--gutter) 72px; }
+.about > h1, .about > section > h2 { max-width: var(--column); margin: 0 auto 24px; padding-left: 0; }  /* the heading starts where the bio's rule starts */
+.about > section > h2 { color: var(--color-primary); }
+.about .bio, .content-body, .contact-block > p:not(.contact-lead) {
+  max-width: var(--column); margin: 0 auto; text-align: left; color: var(--color-text);
+}
+.about .bio, .content-body { padding-left: var(--rule-gap); border-left: 2px solid var(--color-primary); }
+.about .bio > p, .content-body > p { margin: 0 0 1em; }
+.about .bio ul, .about .bio ol, .content-body ul, .content-body ol { margin: 0 0 1em; padding: 0 0 0 1.25em; }
+.about .bio ul, .content-body ul { list-style: disc outside; }
+.about .bio li, .content-body li { margin: 0 0 0.75em; padding-left: 0.25em; }
+.about .bio li:last-child, .content-body li:last-child { margin-bottom: 0; }
+
+/* Content pages (the services hub and its subpages, plan 2026-10-10 WP2): the About look, white ground,
+   one orange rule on the column; the back link sits above the title and below the text. */
+.content { padding: 48px var(--gutter) 72px; }
+.content > h1, .content > .back-link { max-width: var(--column); margin: 0 auto 24px; padding-left: 0; text-align: left; }
+.content-body > h2 { margin: 40px 0 16px; color: var(--color-primary); }
+.content-body > h2:first-child { margin-top: 0; }
+.content-body > h3 { margin: 24px 0 8px; }
+.content-body img { display: block; max-width: 100%; height: auto; margin: 24px 0; }
+.content-body a { text-decoration: underline; }
+/* A link that is a paragraph on its own ("More about ...") gets a 44px hit area without moving the text (layout only). */
+.content-body p > a:only-child { display: inline-block; padding-block: 11px; margin-block: -11px; }
+.about figure img { width: 100%; border: 3px solid var(--color-primary); border-radius: 6px; box-shadow: 8px 8px 12px rgba(0, 0, 0, 0.45); }
+.about figure { text-align: center; }
+.about figcaption { margin-top: 12px; color: var(--color-secondary-text); }
+.about > figure.portrait { width: min(100%, var(--column)); margin: 40px auto 0; }
+.contact-block { scroll-margin-top: 24px; margin-top: 72px; }
+.contact-block > p:not(.contact-lead) { margin-bottom: 1em; }
+.contact-block > .contact-lead { max-width: var(--column); margin: 0 auto 16px; text-align: left; color: var(--color-text); }
+.contact-columns {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; align-items: center;
+  max-width: var(--column); margin: 40px auto 0;  /* the one About column: heading, bio, portrait and contact share its left edge */
+}
+.contact-columns figure { margin: 0; order: -1; }  /* source order puts the address first for narrow screens */
+.contact-columns address { font-style: normal; color: var(--color-text); }
+.contact-columns address a { text-decoration: underline; }
+.contact-columns address a[href*="linkedin.com"] { margin-top: 8px; }
+.contact-columns .hours-label { display: block; margin-top: 16px; color: var(--color-secondary-text); }
+@media (max-width: 767px) {
+  .about > figure.portrait { width: 100%; }
+  .contact-columns { grid-template-columns: 1fr; gap: 24px; }
+  .contact-columns figure { order: 0; }
+}
+
+/* Home call-to-action button */
+.home-button a {
+  display: inline-block; padding: 12px 28px; border-radius: 2px; background: var(--color-primary);
+  color: var(--color-white); text-decoration: none;
+}
+.home-button a:hover, .home-button a:focus-visible {
+  text-decoration: none; background: var(--color-text);
+}
+
+/* The About & Contact LinkedIn link renders as the icon button of the original. Scoped to the contact block:
+   partner cards may link a logo, photo or name to LinkedIn and keep their own look. */
+.contact-columns a[href*="linkedin.com"] {
+  display: inline-block; width: 34px; height: 34px; overflow: hidden; border-radius: 2px;
+  background: var(--color-linkedin) center / 20px 20px no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23fff'%3E%3Cpath d='M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM10 9.5h3.8v1.6h.1c.5-1 1.8-2 3.800-2 4 0 4.800 2.600 4.800 6V21h-4v-5c0-1.200 0-2.800-1.700-2.800s-2 1.300-2 2.700V21h-4z'/%3E%3C/svg%3E");
+  font-size: 0; line-height: 0; color: transparent; vertical-align: middle;
+}
+@media (max-width: 767px) {
+  .contact-columns a[href*="linkedin.com"] { width: 44px; height: 44px; background-size: 24px 24px; }
+}
+/* Inline phone and email links: a 44px hit area without moving the text (layout only). */
+.contact-columns address a, .prose p > a[href^="mailto:"] { display: inline-block; padding-block: 11px; margin-block: -11px; }
+.contact-columns a[href*="linkedin.com"]:hover { text-decoration: none; opacity: 0.85; }
+
+/* ---- home ---- */
+.home-hero { padding: 24px var(--gutter) 8px; text-align: center; }
+.home-hero figure img { width: min(480px, 70%); margin: 0 auto; display: block; }
+.home-claims { margin: 40px auto 56px; }
+.home-claims h1 { margin: 0; color: var(--color-primary); }
+.home-intro { max-width: var(--measure); margin: 0 auto 56px; }
+.home-intro h2 { margin: 0 0 8px; color: var(--color-text); }
+.home-intro h2:first-child { margin-bottom: 4px; }
+.home-intro p { margin: 0 0 12px; }
+.home-vuca { padding: 24px var(--gutter) 24px; text-align: center; }
+.home-portrait { display: block; width: min(420px, 80%); margin: 0 auto 48px; }
+.home-vuca hr { max-width: 620px; margin: 8px auto; border-top: 1px solid var(--color-primary); }
+.home-display { margin: 24px 0; color: var(--color-text); }
+.home-vuca-text { max-width: 42rem; margin: 56px auto 64px; }
+.home-vuca-text p { margin: 0 0 8px; }
+.home-ecosystem { padding: 24px var(--gutter) 40px; background: var(--color-text); text-align: center; }
+.home-ecosystem h2 { margin: 0 0 24px; color: var(--color-primary); }
+.home-card {
+  max-width: 700px; margin: 0 auto 24px; padding: 40px 24px 24px; border-radius: 20px;
+  background: var(--color-white); color: var(--color-text);
+}
+.home-card p { margin: 0 0 16px; }
+.home-button { margin: 0; }
+.home-map { padding: 0; }
+.home-map .partner-map { display: block; width: 100%; max-width: 1140px; margin: 0 auto; }
+/* WordPress tiles: white squares in an inset vignette frame. Global alone in the middle of
+   the first row, Coaching and Consulting large, then rows of three (the studio tile was removed
+   2026-10-10, so fifteen tiles fill them exactly). Each tile carries a visible caption. On hover the logo shrinks and the frame warms to orange. WordPress draws a
+   black 50% inset shadow under a 50% white overlay; one 25% shadow is the same grey. */
+.home-tiles { --tile-vignette: rgba(0, 0, 0, 0.25); display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.home-tiles a {
+  grid-column: span 2; display: block;
+  background: var(--color-white); box-shadow: inset 0 0 46px 37px var(--tile-vignette);
+}
+.home-tiles a:nth-child(2), .home-tiles a:nth-child(3) { grid-column: span 3; }
+.home-tiles a:first-child { grid-column: 3 / span 2; }
+.home-tiles img { display: block; width: 100%; aspect-ratio: 1; padding: 30px; object-fit: contain; }
+.home-tiles .tile-caption { display: block; margin-top: 8px; color: var(--color-text); padding: 0 8px 16px; text-align: center; }
+.home-tiles a:focus-visible { outline-offset: -2px; }
+.home-tiles a:hover, .home-tiles a:focus-visible {
+  background-image: linear-gradient(180deg, transparent, var(--color-primary));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .home-tiles img { transition: transform 0.3s; }
+  .home-tiles a:hover img, .home-tiles a:focus-visible img { transform: scale(0.9); }
+}
+@media (max-width: 767px) {
+  .home-tiles { grid-template-columns: repeat(2, 1fr); }
+  .home-tiles a, .home-tiles a:nth-child(2), .home-tiles a:nth-child(3) {
+    grid-column: span 1; box-shadow: inset 0 0 22px 16px var(--tile-vignette);
+  }
+  .home-tiles a:first-child { grid-column: 1 / -1; justify-self: center; width: calc(50% - 2px); }
+  .home-tiles img { padding: 14px; }
+}
+.home-contact { padding: 40px var(--gutter) 40px; background: var(--color-text); text-align: center; }
+.home-contact h2, .home-contact p { max-width: 900px; margin: 0 auto 16px; color: var(--color-primary); }
+.home-contact a { color: var(--color-white); }
+.home-contact a:hover, .home-contact a:focus-visible { color: var(--color-primary); text-decoration: none; }
+.home-contact .home-button a { color: var(--color-white); }
+.home-contact .home-button a:hover, .home-contact .home-button a:focus-visible { color: var(--color-text); background: var(--color-white); }
+
+/* ---- partner page ---- */
+.partner { padding: 24px var(--gutter) 64px; text-align: center; }
+.partner > img { display: block; width: 300px; max-width: 70%; margin: 0 auto; }
+.partner > h1 { margin: 16px 0 8px; color: var(--color-primary); }
+.partner-intro { max-width: var(--measure); margin: 0 auto 24px; color: var(--color-text); }
+.partner-map { display: block; width: 100%; max-width: var(--container); margin: 0 auto; }
+.partner-map path { fill: var(--color-map-land); stroke: var(--color-map-border); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.partner-map a path { fill: var(--color-primary); }
+.partner-map a:hover path, .partner-map a:focus-visible path { fill: var(--color-text); }
+.partner-map a:focus-visible { outline: none; }
+
+.partner-locations { max-width: var(--container); margin: 24px auto 40px; text-align: center; }
+.partner-locations h2 { color: var(--color-text); margin-bottom: 16px; }
+.partner-locations ul { margin: 0; padding: 0; list-style: none; }
+.partner-locations > nav > ul { display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 20px; }
+/* A region block: the region name is a quiet label above its country chips. */
+.partner-locations > nav > ul > li {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 8px; text-align: left;
+  color: var(--color-secondary-text);
+}
+.partner-locations > nav > ul > li > span { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-secondary-text); }
+/* Chips: at most five equal columns per block, so Europe is three aligned rows with no row lines. */
+.partner-locations ul ul { display: grid; grid-template-columns: repeat(var(--cols, 1), var(--chip-w, 1fr)); width: min-content; gap: 4px; }
+.partner-locations ul ul li { min-width: 92px; display: flex; }
+.partner-locations ul ul a { flex: 1; }
+.partner-region-cols-1 { --cols: 1; }
+.partner-region-cols-2 { --cols: 2; }
+.partner-region-cols-3 { --cols: 3; }
+.partner-region-cols-4 { --cols: 4; }
+.partner-region-cols-5 { --cols: 5; }
+.partner-locations ul ul a {
+  display: flex; align-items: center; justify-content: center; box-sizing: border-box; min-height: 44px; padding: 3px 2px;
+  border: 1px solid var(--color-rule); border-radius: 4px; color: var(--color-text); text-align: center;
+}
+.partner-locations ul ul a:hover, .partner-locations ul ul a:focus-visible { border-color: var(--color-primary); color: var(--color-primary); }
+/* Phones: blocks stack full width with wrapping chips; with script the selects replace them. */
+@media (max-width: 767px) {
+  .partner-locations > nav > ul { flex-direction: column; flex-wrap: nowrap; align-items: stretch; gap: 16px; }
+  .partner-locations > nav > ul > li, .partner-locations > nav > ul > li:first-child { flex-basis: auto; align-items: stretch; }
+  .partner-locations ul ul { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); width: auto; }
+  .partner-locations.has-selects > nav { display: none; }
+}
+.location-selects { display: none; }
+@media (max-width: 767px) {
+  .location-selects { display: grid; gap: 12px; max-width: 360px; margin: 0 auto; text-align: left; }
+}
+.location-selects button {
+  justify-self: start; min-width: 88px; min-height: 44px; padding: 12px 28px; border: 0; border-radius: 2px; cursor: pointer;
+  background: var(--color-primary); color: var(--color-white);
+}
+.location-selects button:hover:not(:disabled), .location-selects button:focus-visible { background: var(--color-text); }
+.location-selects button:disabled { opacity: 0.6; cursor: default; }
+.location-selects label { display: block; margin-bottom: 4px; color: var(--color-secondary-text); }
+.location-selects select {
+  box-sizing: border-box; width: 100%; min-height: 44px; padding: 0 12px; border: 1px solid var(--color-rule); border-radius: 4px;
+  background: var(--color-white); color: var(--color-text);
+}
+.location-selects select:disabled { color: var(--color-secondary-text); opacity: 0.6; }
+.location-selects select:hover:not(:disabled), .location-selects select:focus-visible { border-color: var(--color-primary); }
+/* Anchor jumps from the index and the map land with the country's orange bar in view. */
+.partner-country { scroll-margin-top: 24px; }
+
+/* The lead: Ljubisav, above the country sections. Same testimonial look as the card people rows below
+   (their rules live in the frozen card section at the end of this file). */
+.partner-lead {
+  display: grid; grid-template-columns: var(--avatar) minmax(0, auto); grid-template-rows: 1fr auto auto auto 1fr;
+  column-gap: 24px; width: fit-content; max-width: 100%; text-align: left;
+}
+.partner-lead { margin: 24px auto 32px; }
+.partner-lead > :first-child { grid-area: 1 / 1 / -1 / 2; align-self: center; }
+.partner-lead-name { grid-area: 2 / 2; }
+.partner-lead-job { grid-area: 3 / 2; }
+.partner-lead img {
+  display: block; width: var(--avatar); height: var(--avatar); margin: 0; object-fit: cover; border-radius: 50%;
+}
+.partner-lead-name { margin: 0; color: var(--color-primary); overflow-wrap: break-word; }
+.partner-lead-job { margin: 0; color: var(--color-secondary-text); }
+
+.partner-country { max-width: 980px; margin: 0 auto; }
+.partner-country > h2 { margin: 0 0 24px; padding: 0; color: var(--color-primary); }
+.partner-country::before { content: ""; display: block; height: 20px; margin: 40px 0 24px; background: var(--color-primary); }
+.back-link { margin: 0 0 24px; text-align: center; }
+.back-link a { display: inline-block; padding: 10px 4px; text-decoration: underline; }
+@media (max-width: 767px) {
+  .partner-lead { column-gap: 16px; }
+}
+
+/* The embed panel (assets/js/partner-embed.js builds it): a native modal dialog on existing tokens. */
+.embed-dialog {
+  width: min(560px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); overflow-y: auto; padding: 24px;
+  border: 0; border-top: 6px solid var(--color-primary); border-radius: 2px; background: var(--color-white);
+  color: var(--color-text);
+}
+.embed-dialog::backdrop { background: rgba(1, 43, 106, 0.55); }
+.embed-dialog h2 { margin: 0 0 12px; color: var(--color-text); }
+.embed-preview { margin: 0 0 20px; padding: 16px; background: var(--color-soft); }
+.embed-preview svg { display: block; max-width: 100%; height: auto; margin: 0 auto; }
+.embed-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 8px; align-items: start; margin: 0 0 16px; }
+.embed-row label { grid-column: 1 / -1; color: var(--color-secondary-text); }
+.embed-field {
+  width: 100%; min-width: 0; padding: 8px 10px; border: 1px solid var(--color-secondary); border-radius: 2px;
+  background: var(--color-white); color: var(--color-text); font: 13px/20px ui-monospace, Menlo, Consolas, monospace;
+  letter-spacing: 0;
+}
+textarea.embed-field { display: block; resize: vertical; overflow-wrap: anywhere; }
+.embed-copy, .embed-close {
+  min-height: 44px; padding: 8px 16px; border: 0; border-radius: 2px; background: var(--color-primary);
+  color: var(--color-white); cursor: pointer;
+}
+.embed-copy:hover, .embed-copy:focus-visible, .embed-close:hover, .embed-close:focus-visible { background: var(--color-text); }
+.embed-row:has(textarea) .embed-copy { align-self: start; }
+.embed-close { background: var(--color-soft); color: var(--color-text); }
+.embed-close:hover, .embed-close:focus-visible { background: var(--color-text); color: var(--color-white); }
+.embed-status { min-height: 24px; margin: 0 0 12px; color: var(--color-secondary-text); }
+@media (max-width: 767px) {
+  .embed-dialog { padding: 16px; }
+  .embed-row { grid-template-columns: minmax(0, 1fr); }
+  .embed-copy { justify-self: start; }
+}
+
+/* ==== partner cards ====
+   Every rule that matches inside an article.partner-card, layout and colour only (round 6). The type of a card is set in the type roles section: the body is the body
+   role (inherited), a title line is h3, a person's name is h2, role and affiliation are labels, the one bold
+   variant is strong. A selector in this section never mixes a card with a non-card target.
+   Check after any CSS change: python3 -P scripts/type_audit.py scan, and the card captures at 1440 and 390. */
+.partner-card {
+  position: relative; margin: 0 auto; padding: 44px 0 24px; border-bottom: 3px solid var(--color-text);
+  scroll-margin-top: 24px;
+}
+/* A visitor arriving from a partner's badge lands on one card among 72: mark it, quietly. */
+.partner-card:target { outline: 2px solid var(--color-primary); outline-offset: 12px; }
+/* The card's permalink: a 44px tap target in the top-right corner, a 20px chain-link icon. The card's
+   top padding is that 44px (it replaces the 40px margin below the previous card), so the icon sits
+   in its own band at every width and never overlaps the logo or the text. */
+.card-link {
+  position: absolute; top: 0; right: 0; display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; color: var(--color-secondary); text-decoration: none;
+}
+.card-link:hover, .card-link:focus-visible { color: var(--color-primary); }
+.card-link svg { display: block; width: 20px; height: 20px; }
+.partner-card:last-of-type { margin-bottom: 8px; border-bottom: 0; }
+.partner-logo { margin: 0 0 24px; text-align: center; }
+.partner-logo img { display: block; max-width: 300px; max-height: 200px; width: auto; height: auto; margin: 0 auto; }
+.partner-body { max-width: var(--measure); margin: 0 auto; text-align: left; color: var(--color-text); }
+.partner-body p, .partner-body li { text-wrap: pretty; }
+.partner-body ul, .partner-body ol { margin: 0 0 16px; padding-left: 1.25em; }
+.partner-body li { margin: 0 0 8px; }
+.partner-body li::marker { color: var(--color-primary); }
+.partner-body a { text-decoration: underline; }
+.partner-people { max-width: 680px; margin: 32px auto 0; padding: 0; list-style: none; text-align: left; }
+.partner-people li { margin: 0 auto 24px; }
+/* WordPress testimonial look: a circular photo with name and role beside it, the pair centred
+   and the text vertically centred on the photo (rows 1 and 5 absorb the slack). */
+.partner-people li:has(img) {
+  display: grid; grid-template-columns: var(--avatar) minmax(0, auto); grid-template-rows: 1fr auto auto auto 1fr;
+  column-gap: 24px; width: fit-content; max-width: 100%; text-align: left;
+}
+.partner-people li:has(img) > :first-child { grid-area: 1 / 1 / -1 / 2; align-self: center; }
+.partner-people .person-name { grid-area: 2 / 2; }
+.partner-people .person-name + * { grid-area: 3 / 2; }
+.partner-people .person-name + * + * { grid-area: 4 / 2; }
+.partner-people img {
+  display: block; width: var(--avatar); height: var(--avatar); margin: 0; object-fit: cover; border-radius: 50%;
+}
+.partner-people .person-name { margin: 0; color: var(--color-primary); }
+/* Pearls on a rope: every person row has the same fixed width (never the name's width), is
+   centred, then nudged sideways by a fixed offset: odd rows left, even rows right. A single
+   person is not shifted. The text column takes the remaining width, so long roles wrap inside. */
+.partner-people li:has(img) { width: min(100%, 620px); grid-template-columns: var(--avatar) minmax(0, 1fr); }
+.partner-people li:not(:only-child):nth-child(odd) { translate: -50px 0; }
+.partner-people li:not(:only-child):nth-child(even) { translate: 50px 0; }
+.partner-people a { color: inherit; text-decoration: none; }
+/* 24px minimum hit area for name and role links without a photo link (layout only; cards stay pixel-identical) */
+.partner-people > li > a:not(:has(img)), .partner-people .person-name a {
+  padding-block: 12px; margin-block: -12px;
+}
+.partner-people .person-name { overflow-wrap: break-word; }
+.partner-people .person-role, .partner-people .person-affiliation {
+  display: block; overflow-wrap: break-word; text-wrap: balance; color: var(--color-secondary-text);
+}
+/* The sideways offset must fit inside the card: from 768 px the card can be narrower than 620 + 2 x 50 px, so a
+   shifted row gives up the room its offset needs instead of sticking out of the card. */
+@media (min-width: 768px) {
+  .partner-people li:not(:only-child) { max-width: calc(100% - 100px); }
+}
+@media (max-width: 767px) {
+  .partner-people li:has(img) { column-gap: 16px; }
+  .partner-people li:not(:only-child):nth-child(n) { translate: none; }
+}
+/* ==== end partner cards ==== */
