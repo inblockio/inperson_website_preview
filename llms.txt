@@ -1,0 +1,16 @@
+# INPERSON Group
+
+> INPERSON Group is a visionary conglomerate dedicated to fostering innovation, growth and excellence across healthcare, technology and venture capital. Through a network of alliance partners across 15+ countries it delivers full-service strategic consulting, from market entry to C-level coaching. Contact details are on the About and contact page.
+
+## Pages
+
+- [Home](https://inperson.group/): INPERSON Group is a visionary conglomerate fostering innovation, growth and excellence across healthcare, technology and venture capital in 15+ countries.
+- [About & Contact](https://inperson.group/about-us/): Ljubisav Matejevic is founder and CEO of INPERSON Group, a strategic conglomerate spanning healthcare, technology, venture capital and executive coaching.
+- [Delivering keynotes](https://inperson.group/delivering-keynotes/): Ljubisav Matejevic and his alliance partners give keynotes on healthcare transformation, digital strategy, alliance management and leadership in the VUCA world.
+- [Executive search](https://inperson.group/executive-search/): We help you identify, attract and hire leaders, whether you are filling a single position or building an entire leadership team. See how we work.
+- [Imprint](https://inperson.group/imprint/): Imprint of INPERSON Group: company owner Ljubisav Matejevic, who is responsible for the content of this website, and the company's address and contact details.
+- [Negotiations & mediation](https://inperson.group/negotiations/): We help you negotiate with suppliers, customers, partners and other stakeholders, and resolve conflicts that arise during or after a negotiation.
+- [Global Alliance Partner](https://inperson.group/our-partner/): Our Global Alliance Partners are curated and regularly updated by Ljubisav Matejevic: a high-trust group of companies and people who share our values.
+- [Privacy Policy](https://inperson.group/privacy-policy/): In this privacy policy INPERSON Group informs you about the processing of your personal data: hosting on GitHub Pages, server log files and your rights.
+- [Services](https://inperson.group/services/): Services: alliance and ecosystem management, management consulting, business transformation, go-to-market, negotiations, executive search and keynotes.
+
